@@ -7,7 +7,6 @@ const { createInterface } = require("node:readline");
 Пользователь набирает числа в стандартный поток ввода и получает ответ больше или меньше, чем загаданное.
 */
 const number = Math.round(Math.random() * 100);
-(()=> {
 const rl = createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -19,21 +18,28 @@ rl.prompt();
 rl
   .on("line", line => {
     const n = Number(line.trim());
-    if (isNaN(n)) {
-      console.log('Вводить можно только числа!')
+    if (isNaN(n) || line.trim().length === 0) {
+      console.log("Вводить можно только числа и сам ввод числа обязателен! \nПопробуй еще раз :)");
+    } else {
+      if (n > 100 || n < 0) {
+        console.log("Число должно быть от 0 до 100 ! Попробуй еще раз :)");
+      } else {
+        if (n < number) {
+          console.log("Больше");
+        } else if (n > number) {
+          console.log("Меньше");
+        } else if (n === number) {
+          console.log(`Отгадано число ${number}`);
+          process.exit(0);
+        }
+      }
     }
-    if (n < number) {
-      console.log("Больше");
-    } else if (n > number) {
-      console.log("Меньше");
-    } else if (n === number) {
-      console.log(`Отгадано число ${number}`);
-      process.exit(0);
-    }
+  })
+  .on("SIGINT", () => {
+    console.log("Жаль, что сдался так быстро");
+    process.exit(0);
   })
   .on("close", () => {
     console.log("Жаль, что сдался так быстро");
     process.exit(0);
   });
-})()
-

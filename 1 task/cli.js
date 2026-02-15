@@ -28,14 +28,18 @@ yargs(hideBin(process.argv))
         });
     },
     argv => {
+      if ([argv.year, argv.month, argv.date].filter(Boolean).length > 1) {
+        console.log("Нельзя использовать больше 1 опции")
+        process.exit(0)
+      }
       if (argv.year) {
         console.log(currentDate.getFullYear());
       } else if (argv.month) {
-        console.log(currentDate.getMonth() + 1);
+        console.log(currentDate.getMonth() + 1)
       } else if (argv.date) {
         console.log(currentDate.getDate());
       } else {
-        console.log(currentDate);
+        console.log(currentDate.toISOString());
       }
     }
   )
@@ -66,7 +70,7 @@ yargs(hideBin(process.argv))
       currentDate.setMonth(currentDate.getMonth() + (argv.month || 0));
       currentDate.setDate(currentDate.getDate() + (argv.date || 0));
 
-      console.log(currentDate);
+      console.log(currentDate.toISOString());
     }
   )
   // Команда sub
@@ -96,7 +100,7 @@ yargs(hideBin(process.argv))
       currentDate.setMonth(currentDate.getMonth() - (argv.month || 0));
       currentDate.setDate(currentDate.getDate() - (argv.date || 0));
 
-      console.log(currentDate);
+      console.log(currentDate.toISOString());
     }
   )
   .demandCommand(1, "You need to specify a command: current, add or sub")
