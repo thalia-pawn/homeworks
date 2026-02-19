@@ -1,0 +1,28 @@
+{
+  "name": "004-stream-homework",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "analyse": "./analyse.js",
+    "coinGame": "./game.js"
+  },
+  "console": "false",
+  "homepage": "https://github.com/thalia-pawn/homeworks#readme",
+  "bugs": {
+    "url": "https://github.com/thalia-pawn/homeworks/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thalia-pawn/homeworks.git"
+  },
+  "license": "ISC",
+  "author": "A. Rashchupkin",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "yargs": "^17.7.2"
+  }
+}
