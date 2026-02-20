@@ -1,0 +1,31 @@
+{
+  "name": "005-http-homework",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "weather": "./index.js"
+  },
+  "console": "false",
+  "homepage": "https://github.com/thalia-pawn/homeworks#readme",
+  "bugs": {
+    "url": "https://github.com/thalia-pawn/homeworks/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thalia-pawn/homeworks.git"
+  },
+  "license": "ISC",
+  "author": "A. Rashchupkin",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node -r dotenv/config index.js moscow",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "dotenv": "^17.3.1"
+  }
+}
