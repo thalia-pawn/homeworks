@@ -47,7 +47,7 @@ router.post('/upload',
             const { filename } = req.file
             const fileUuid = uuidv4()
             booksResources.set(fileUuid,  path.join("public/books/", filename))
-            res.json({fileUuid})
+            res.json({fileBook: fileUuid})
         } catch (error) {
             next(error)
         }
