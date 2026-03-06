@@ -1,16 +1,14 @@
-import multer from 'multer'
+import multer from 'multer';
 
 const storage = multer.diskStorage({
-    destination(req, file, cb){
-        cb(null, 'public/books')
-    },
-    filename(req, file, cb) {
-        cb(null, file.originalname)
-    }
-})
+  destination(req, file, cb) {
+    cb(null, 'public/books');
+  },
+  filename(req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
 
-const multerData = multer({storage});
+const multerData = multer({ storage });
 
-export {
-    multerData
-}
+export { multerData };

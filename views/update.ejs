@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <nav class="actions">
+        <a class="button button-secondary" href="/books/<%= book.id %>">← К карточке книги</a>
+      </nav>
+
+      <section class="card">
+        <h1>Редактирование книги</h1>
+
+        <form action="/books/<%= book.id %>/update" method="post" class="form-grid">
+          <label>
+            Заголовок
+            <input type="text" name="title" value="<%= book.title %>" required />
+          </label>
+
+          <label>
+            Описание
+            <textarea name="description" rows="4" required><%= book.description %></textarea>
+          </label>
+
+          <label>
+            Авторы
+            <input type="text" name="authors" value="<%= book.authors %>" required />
+          </label>
+
+          <label>
+            Избранное
+            <input type="text" name="favorite" value="<%= book.favorite %>" required />
+          </label>
+
+          <label>
+            Ссылка на обложку
+            <input type="text" name="fileCover" value="<%= book.fileCover %>" required />
+          </label>
+
+          <label>
+            Имя файла книги
+            <input type="text" name="fileName" value="<%= book.fileName %>" required />
+          </label>
+
+          <label>
+            UUID файла книги
+            <input type="text" name="fileBook" value="<%= book.fileBook %>" required />
+          </label>
+
+          <button type="submit" class="button">Сохранить изменения</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

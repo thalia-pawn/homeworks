@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <nav class="actions">
+        <a class="button button-secondary" href="/books">← К списку</a>
+        <a class="button" href="/books/<%= book.id %>/update">Редактировать</a>
+      </nav>
+
+      <section class="card book-view">
+        <div>
+          <h1><%= book.title %></h1>
+          <dl class="book-meta">
+            <dt>ID</dt>
+            <dd><%= book.id %></dd>
+
+            <dt>Описание</dt>
+            <dd><%= book.description %></dd>
+
+            <dt>Авторы</dt>
+            <dd><%= book.authors %></dd>
+
+            <dt>Избранное</dt>
+            <dd><%= book.favorite %></dd>
+
+            <dt>Обложка</dt>
+            <dd><%= book.fileCover %></dd>
+
+            <dt>Имя файла</dt>
+            <dd><%= book.fileName %></dd>
+
+            <dt>Идентификатор файла</dt>
+            <dd><%= book.fileBook %></dd>
+          </dl>
+        </div>
+      </section>
+
+      <form action="/books/<%= book.id %>/delete" method="post" class="inline-form">
+        <button type="submit" class="button button-danger">Удалить книгу</button>
+      </form>
+    </main>
+  </body>
+</html>
