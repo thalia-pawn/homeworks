@@ -1,0 +1,13 @@
+C:\Users\a.rashchupkin>docker run -it --env NAME="Alexander" --env SURNAME="Rashchupkin" --name mynode node:15.14
+Welcome to Node.js v15.14.0.
+Type ".help" for more information.
+> console.log(`Привет ${process.env.NAME} ${process.env.SURNAME}!`)
+Привет Alexander Rashchupkin!
+undefined
+> .exit
+
+C:\Users\a.rashchupkin>docker container stop mynode
+mynode
+
+C:\Users\a.rashchupkin>docker rmi -f node:15.14
+Untagged: node:15.14

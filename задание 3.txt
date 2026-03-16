@@ -1,0 +1,45 @@
+C:\Users\a.rashchupkin>docker run -d -v "%cd%/data:/var/first/data" --name first_node node:15.14
+1febe46589c0de8baef5c6f6a71e9ddc4369402e6653d853f70abe7edf88437b
+
+C:\Users\a.rashchupkin>docker run -d -v "%cd%/data:/var/second/data" --name second_node node:15.14
+ea8cc874be3af7814d2d97765d4b6a4af76f6c4f445700fe5948ab87df250252
+
+C:\Users\a.rashchupkin>docker run -d -v "%cd%/data:/var/first/data" -it --name first_node node:15.14
+0e74cc6f9bca4b46177286d0dd3d0e8653fd20db968d9af8fabb2b09d100b0c1
+
+C:\Users\a.rashchupkin>docker run -d -v "%cd%/data:/var/second/data" -it --name second_node node:15.14
+eb6df06076e3cabd3bf02ebdc58b933adc6381969a6f37186039d05873984c5b
+
+C:\Users\a.rashchupkin>docker exec first_node bash
+
+C:\Users\a.rashchupkin>docker exec -it first_node bash
+root@0e74cc6f9bca:/# ls
+bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@0e74cc6f9bca:/# cd var/first/data/
+root@0e74cc6f9bca:/var/first/data# cat > "test.txt"
+First file
+root@0e74cc6f9bca:/var/first/data# ls
+test.txt
+
+C:\Users\a.rashchupkin>docker exec -it second_node bash
+root@eb6df06076e3:/# cd var/second/data/
+root@eb6df06076e3:/var/second/data# ls
+test.txt  test_2.txt
+root@eb6df06076e3:/var/second/data# cat test.txt
+First file
+root@eb6df06076e3:/var/second/data#
+C:\Users\a.rashchupkin>docker stop first_node
+first_node
+
+C:\Users\a.rashchupkin>docker stop second_node
+second_node
+
+C:\Users\a.rashchupkin>docker rm second_node
+second_node
+
+C:\Users\a.rashchupkin>docker rm first_node
+first_node
+
+C:\Users\a.rashchupkin>docker rmi node:15.14
+Untagged: node:15.14
+Deleted: sha256:608bba799613b1ebf754034ae008849ba51e88b23271412427b76d60ae0d0627
