@@ -27,6 +27,6 @@ app.use('/api/users', usersRouter);
 app.use(notFound);
 app.use(errHandling);
 
-app.listen(3000, 'localhost', () => {
-  console.log('Сервер запущен: http://localhost:3000');
+app.listen(3000, () => {
+  console.log('Сервер запущен на порту: 3000');
 });
