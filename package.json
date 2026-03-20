@@ -1,0 +1,29 @@
+{
+  "name": "book-view-service",
+  "version": "1.0.0",
+  "description": "project for course",
+  "homepage": "https://github.com/thalia-pawn/homeworks#readme",
+  "bugs": {
+    "url": "https://github.com/thalia-pawn/homeworks/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thalia-pawn/homeworks.git"
+  },
+  "license": "ISC",
+  "author": "A. Rashchupkin",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "uuid": "^13.0.0"
+  }
+}
