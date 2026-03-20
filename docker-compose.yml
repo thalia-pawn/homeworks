@@ -1,0 +1,16 @@
+services:
+  libraryApp:
+    image: thaliapawn/library-node-app:1.1.0
+    container_name: libraryApp
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+
+  viewsService:
+    image: thaliapawn/book-view-service:1.0.0
+    container_name: viewsService
+    restart: unless-stopped
+    volumes:
+      - /app/data
+    ports:
+      - "3001:3001"

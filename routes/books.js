@@ -75,8 +75,8 @@ router.post('/create', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   try {
     const book = getBookOrThrow(req.params.id);
-    axios.post(`http://localhost:3001/counter/${req.params.id}/incr`, {}).then(()=>{
-      axios.get(`http://localhost:3001/counter/${req.params.id}`).then((body)=>{
+    axios.post(`http://viewsService:3001/counter/${req.params.id}/incr`, {}).then(()=>{
+      axios.get(`http://viewsService:3001/counter/${req.params.id}`).then((body)=>{
           book.countOfViews = JSON.stringify(body.data);
           books.set(req.params.id, book);
       }).then(()=>{
