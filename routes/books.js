@@ -6,6 +6,7 @@ import { Book } from '../dataModels/books.js';
 import { books, booksResources } from '../repo/books.js';
 import { ValidationError, EntitityNotFound } from '../errors/commonErrors.js';
 import { multerData } from '../midlewares/file.js';
+import axios from 'axios';
 
 const router = express.Router();
 
@@ -17,7 +18,7 @@ function normalizeBookPayload(payload) {
     favorite: payload.favorite?.trim() || 'false',
     fileCover: payload.fileCover?.trim() || '',
     fileName: payload.fileName?.trim() || '',
-    fileBook: payload.fileBook?.trim() || '',
+    fileBook: payload.fileBook?.trim() || ''
   };
 }
 
@@ -40,7 +41,6 @@ function getBookOrThrow(id) {
   if (!books.has(id)) {
     throw new EntitityNotFound(`Book with id: ${id} not found`);
   }
-
   return books.get(id);
 }
 
@@ -75,10 +75,16 @@ router.post('/create', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   try {
     const book = getBookOrThrow(req.params.id);
-
-    res.render('view', {
-      title: `Книга: ${book.title}`,
-      book,
+    axios.post(`http://localhost:3001/counter/${req.params.id}/incr`, {}).then(()=>{
+      axios.get(`http://localhost:3001/counter/${req.params.id}`).then((body)=>{
+          book.countOfViews = JSON.stringify(body.data);
+          books.set(req.params.id, book);
+      }).then(()=>{
+        res.render('view', {
+          title: `Книга: ${book.title}`,
+          book,
+        });
+      })
     });
   } catch (error) {
     next(error);

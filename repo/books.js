@@ -10,7 +10,7 @@ const demoBook = new Book({
   favorite: 'true',
   fileCover: 'https://placehold.co/300x420?text=Book+Cover',
   fileName: 'nodejs-design-patterns.pdf',
-  fileBook: 'demo-file-id',
+  fileBook: 'demo-file-id'
 });
 
 books.set(demoBook.id, demoBook);

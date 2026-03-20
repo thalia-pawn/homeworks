@@ -10,5 +10,6 @@ export class Book {
     this.fileCover = fileCover;
     this.fileName = fileName;
     this.fileBook = fileBook;
+    this.countOfViews = 0;
   }
 }
