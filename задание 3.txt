@@ -1,33 +1,41 @@
-C:\Users\a.rashchupkin>docker run -d -v "%cd%/data:/var/first/data" --name first_node node:15.14
-1febe46589c0de8baef5c6f6a71e9ddc4369402e6653d853f70abe7edf88437b
+C:\Users\a.rashchupkin>docker run -d -v "%cd%/data:/var/first/data" --name first_node node:15.14 sleep infinity
+Unable to find image 'node:15.14' locally
+15.14: Pulling from library/node
+4b57d41e8391: Pull complete
+787f5e2f1047: Pull complete
+55fab5cadd3c: Pull complete
+6041b69671c6: Pull complete
+7b6173a10eb8: Pull complete
+dc05be471d51: Pull complete
+bfde2ec33fbc: Pull complete
+989c5d2d2313: Pull complete
+bd821d20ef8c: Pull complete
+Digest: sha256:608bba799613b1ebf754034ae008849ba51e88b23271412427b76d60ae0d0627
+Status: Downloaded newer image for node:15.14
+5f2470fdfc0c7b89f07da10036a69a4284b7bd3b347b6a8b735c850db59b62ce
 
-C:\Users\a.rashchupkin>docker run -d -v "%cd%/data:/var/second/data" --name second_node node:15.14
-ea8cc874be3af7814d2d97765d4b6a4af76f6c4f445700fe5948ab87df250252
+C:\Users\a.rashchupkin>docker run -d -v "%cd%/data:/var/second/data" --name second_node node:15.14 sleep infinity
+ca282a8f71b489a5d3263f0342dd2a08717edc9309fdf05831a3013023fc8514
 
-C:\Users\a.rashchupkin>docker run -d -v "%cd%/data:/var/first/data" -it --name first_node node:15.14
-0e74cc6f9bca4b46177286d0dd3d0e8653fd20db968d9af8fabb2b09d100b0c1
-
-C:\Users\a.rashchupkin>docker run -d -v "%cd%/data:/var/second/data" -it --name second_node node:15.14
-eb6df06076e3cabd3bf02ebdc58b933adc6381969a6f37186039d05873984c5b
-
-C:\Users\a.rashchupkin>docker exec first_node bash
+C:\Users\a.rashchupkin>docker ps
+CONTAINER ID   IMAGE        COMMAND                  CREATED          STATUS          PORTS     NAMES
+ca282a8f71b4   node:15.14   "docker-entrypoint.s…"   23 seconds ago   Up 22 seconds             second_node
+5f2470fdfc0c   node:15.14   "docker-entrypoint.s…"   44 seconds ago   Up 40 seconds             first_node
 
 C:\Users\a.rashchupkin>docker exec -it first_node bash
-root@0e74cc6f9bca:/# ls
-bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
-root@0e74cc6f9bca:/# cd var/first/data/
-root@0e74cc6f9bca:/var/first/data# cat > "test.txt"
-First file
-root@0e74cc6f9bca:/var/first/data# ls
-test.txt
+root@5f2470fdfc0c:/# cd var/first/data/
+root@5f2470fdfc0c:/var/first/data# cat > "test.txt"
+test file
 
-C:\Users\a.rashchupkin>docker exec -it second_node bash
-root@eb6df06076e3:/# cd var/second/data/
-root@eb6df06076e3:/var/second/data# ls
+root@5f2470fdfc0c:/var/first/data# ls
 test.txt  test_2.txt
-root@eb6df06076e3:/var/second/data# cat test.txt
-First file
-root@eb6df06076e3:/var/second/data#
+
+root@5f2470fdfc0c:/var/first/data# ^X
+C:\Users\a.rashchupkin>docker exec -it second_node bash
+root@ca282a8f71b4:/# cd var/second/data/
+root@ca282a8f71b4:/var/second/data# ls
+test.txt  test_2.txt
+
 C:\Users\a.rashchupkin>docker stop first_node
 first_node
 
