@@ -1,15 +1,39 @@
 import { v4 as uuidv4 } from 'uuid';
+import {model, Schema} from 'mongoose'
 
-export class Book {
-  constructor({ title, description, authors, favorite, fileCover, fileName, fileBook }) {
-    this.id = uuidv4();
-    this.title = title;
-    this.description = description;
-    this.authors = authors;
-    this.favorite = favorite;
-    this.fileCover = fileCover;
-    this.fileName = fileName;
-    this.fileBook = fileBook;
-    this.countOfViews = 0;
-  }
-}
+const bookModel = new Schema({
+  countOfViews: {
+    type: Number,
+    default: 0
+  },
+  title: {
+    type: String,
+    required : true
+  },
+  description: {
+    type: String,
+    default : ''
+  },
+  authors: {
+    type: String,
+    required : true
+  },
+  favorite: {
+    type: Boolean,
+    default : false
+  },
+  fileCover: {
+    type: String,
+    default : ''
+  },
+  fileName: {
+    type: String,
+    default : ''
+  },
+  fileBook: {
+    type: String,
+    default : ''
+  },
+});
+
+export default model('Books', bookModel)

@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import mongoose from 'mongoose';
 
 import { router as booksRouter } from './routes/books.js';
 import { router as usersRouter } from './routes/users.js';
@@ -27,6 +28,18 @@ app.use('/api/users', usersRouter);
 app.use(notFound);
 app.use(errHandling);
 
-app.listen(3000, () => {
-  console.log('Сервер запущен на порту: 3000');
-});
+async function main() {
+    try{
+        await mongoose.connect("mongodb://root:password@mongo:27017/books?authSource=admin", {
+            pass: "password",
+            user: "root"
+        });
+        app.listen(3000);
+        console.log("Сервер запущен на порту: 3000");
+    }
+    catch(err) {
+        return console.error(err);
+    }
+}
+
+main()

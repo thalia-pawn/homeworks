@@ -1,16 +1,46 @@
-import { Book } from '../dataModels/books.js';
+import Book from '../dataModels/books.js';
 
 export const books = new Map();
 export const booksResources = new Map();
 
-const demoBook = new Book({
-  title: 'Node.js Design Patterns',
-  description: 'Практическое руководство по созданию приложений на Node.js.',
-  authors: 'Mario Casciaro, Luciano Mammino',
-  favorite: 'true',
-  fileCover: 'https://placehold.co/300x420?text=Book+Cover',
-  fileName: 'nodejs-design-patterns.pdf',
-  fileBook: 'demo-file-id'
-});
+async function getBooks(){
+  return await Book.find({});
+}
 
-books.set(demoBook.id, demoBook);
+async function getBookById(id) {
+  return await Book.findById({_id: id});
+}
+
+async function deleteBook(id) {
+  return await Book.deleteOne({
+    _id: id
+  })
+}
+async function isExist(id) {
+  return await Book.exists({
+    _id: id
+  })
+}
+async function incrViewsCount(id, countOfViews) {
+  return await Book.updateOne({_id: id}, {
+    countOfViews: countOfViews
+  })
+}
+
+async function createBook(payload) {
+  return await Book.insertOne(payload)
+}
+
+async function updateBook(id, dataToUpdate) {
+  return await Book.updateOne({_id: id}, dataToUpdate)
+}
+
+export {
+  getBooks,
+  getBookById,
+  deleteBook,
+  createBook,
+  incrViewsCount,
+  isExist,
+  updateBook
+}

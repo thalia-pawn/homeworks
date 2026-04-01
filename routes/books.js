@@ -2,8 +2,8 @@ import express from 'express';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Book } from '../dataModels/books.js';
-import { books, booksResources } from '../repo/books.js';
+import Book from '../dataModels/books.js';
+import { books, booksResources, getBookById, getBooks, createBook, incrViewsCount, deleteBook, isExist, updateBook } from '../repo/books.js';
 import { ValidationError, EntitityNotFound } from '../errors/commonErrors.js';
 import { multerData } from '../midlewares/file.js';
 import axios from 'axios';
@@ -15,7 +15,7 @@ function normalizeBookPayload(payload) {
     title: payload.title?.trim() || '',
     description: payload.description?.trim() || '',
     authors: payload.authors?.trim() || '',
-    favorite: payload.favorite?.trim() || 'false',
+    favorite: payload.favorite?.trim() || false,
     fileCover: payload.fileCover?.trim() || '',
     fileName: payload.fileName?.trim() || '',
     fileBook: payload.fileBook?.trim() || ''
@@ -37,17 +37,20 @@ function validateBookPayload(payload) {
   }
 }
 
-function getBookOrThrow(id) {
-  if (!books.has(id)) {
-    throw new EntitityNotFound(`Book with id: ${id} not found`);
+async function getBookOrThrow(id) {
+  const isExistBook = await isExist(id)
+  if (!isExistBook){
+      throw new EntitityNotFound(`Book with id: ${id} not found`);
+  } else {
+      return await getBookById(id)
   }
-  return books.get(id);
 }
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+  const books = await getBooks()
   res.render('index', {
     title: 'Список книг',
-    books: [...books.values()],
+    books: [...books],
   });
 });
 
@@ -58,13 +61,13 @@ router.get('/create', (req, res) => {
   });
 });
 
-router.post('/create', (req, res, next) => {
+router.post('/create', async (req, res, next) => {
   try {
     const payload = normalizeBookPayload(req.body);
     validateBookPayload(payload);
 
     const book = new Book(payload);
-    books.set(book.id, book);
+    await createBook(book);
 
     res.redirect(`/books/${book.id}`);
   } catch (error) {
@@ -72,28 +75,27 @@ router.post('/create', (req, res, next) => {
   }
 });
 
-router.get('/:id', (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   try {
-    const book = getBookOrThrow(req.params.id);
-    axios.post(`http://viewsService:3001/counter/${req.params.id}/incr`, {}).then(()=>{
-      axios.get(`http://viewsService:3001/counter/${req.params.id}`).then((body)=>{
-          book.countOfViews = JSON.stringify(body.data);
-          books.set(req.params.id, book);
-      }).then(()=>{
-        res.render('view', {
-          title: `Книга: ${book.title}`,
-          book,
-        });
-      })
+    const { id } = req.params;
+    const book = await getBookOrThrow(id);
+
+    await axios.post(`http://viewsService:3001/counter/${id}/incr`, {});
+    const response = await axios.get(`http://viewsService:3001/counter/${id}`);
+    await incrViewsCount(id, response.data);
+
+    res.render('view', {
+      title: `Книга: ${book.title}`,
+      book,
     });
   } catch (error) {
     next(error);
   }
 });
 
-router.get('/:id/update', (req, res, next) => {
+router.get('/:id/update', async (req, res, next) => {
   try {
-    const book = getBookOrThrow(req.params.id);
+    const book = await getBookOrThrow(req.params.id);
 
     res.render('update', {
       title: `Редактирование: ${book.title}`,
@@ -104,26 +106,22 @@ router.get('/:id/update', (req, res, next) => {
   }
 });
 
-router.post('/:id/update', (req, res, next) => {
+router.post('/:id/update', async (req, res, next) => {
   try {
     const { id } = req.params;
-    const currentBook = getBookOrThrow(id);
+    await getBookOrThrow(id);
     const payload = normalizeBookPayload(req.body);
-    validateBookPayload(payload);
-
-    const updatedBook = Object.assign(currentBook, payload);
-    books.set(id, updatedBook);
-
+    await updateBook(id, payload);
     res.redirect(`/books/${id}`);
   } catch (error) {
     next(error);
   }
 });
 
-router.post('/:id/delete', (req, res, next) => {
+router.post('/:id/delete', async (req, res, next) => {
   try {
-    getBookOrThrow(req.params.id);
-    books.delete(req.params.id);
+    const id = req.params.id
+    await deleteBook(id);
     res.redirect('/books');
   } catch (error) {
     next(error);
