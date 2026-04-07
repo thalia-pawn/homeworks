@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <nav class="actions">
+        <a class="button button-secondary" href="/books">← На главную</a>
+      </nav>
+
+      <section class="card">
+        <h1>Пожалуйста, авторизуйтесь</h1>
+
+        <form action="/user/login" method="post" class="form-grid">
+          <label>
+            Логин
+            <input type="text" name="login" value="" required />
+          </label>
+
+          <label>
+            Пароль
+            <input type="text" name="password" value="" required />
+          </label>
+          <button type="submit" class="button">Войти</button>
+        </form>
+        <form action="/user/signup" method="get" class="inline-form">
+            <button type="submit" class="button button-danger">Зарегистрироваться</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,10 +1,10 @@
 import express from 'express';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-
+import passport from 'passport';
 import Book from '../dataModels/books.js';
 import { books, booksResources, getBookById, getBooks, createBook, incrViewsCount, deleteBook, isExist, updateBook } from '../repo/books.js';
-import { ValidationError, EntitityNotFound } from '../errors/commonErrors.js';
+import { ValidationError, EntitityNotFound, AuthError } from '../errors/commonErrors.js';
 import { multerData } from '../midlewares/file.js';
 import axios from 'axios';
 
@@ -12,13 +12,13 @@ const router = express.Router();
 
 function normalizeBookPayload(payload) {
   return {
-    title: payload.title?.trim() || '',
-    description: payload.description?.trim() || '',
-    authors: payload.authors?.trim() || '',
+    title: payload.title?.trim() || null,
+    description: payload.description?.trim() || null,
+    authors: payload.authors?.trim() || null,
     favorite: payload.favorite?.trim() || false,
-    fileCover: payload.fileCover?.trim() || '',
-    fileName: payload.fileName?.trim() || '',
-    fileBook: payload.fileBook?.trim() || ''
+    fileCover: payload.fileCover?.trim() || null,
+    fileName: payload.fileName?.trim() || null,
+    fileBook: payload.fileBook?.trim() || null
   };
 }
 
@@ -54,15 +54,26 @@ router.get('/', async (req, res) => {
   });
 });
 
-router.get('/create', (req, res) => {
-  res.render('create', {
-    title: 'Создание книги',
-    book: normalizeBookPayload({}),
-  });
+router.get('/create', (req, res, next) => {
+  try {
+    if (!req.isAuthenticated || !req.isAuthenticated()) {
+      res.redirect('/user/login')
+    } else {
+        res.render('create', {
+          title: 'Создание книги',
+          book: normalizeBookPayload({}),
+        })
+    }
+  } catch (error) {
+    next(error)
+  }
 });
 
 router.post('/create', async (req, res, next) => {
   try {
+    if (!req.isAuthenticated || !req.isAuthenticated()) {
+      res.redirect('/user/login')
+    }
     const payload = normalizeBookPayload(req.body);
     validateBookPayload(payload);
 
@@ -95,6 +106,9 @@ router.get('/:id', async (req, res, next) => {
 
 router.get('/:id/update', async (req, res, next) => {
   try {
+    if (!req.isAuthenticated || !req.isAuthenticated()) {
+      res.redirect('/user/login')
+    }
     const book = await getBookOrThrow(req.params.id);
 
     res.render('update', {
@@ -108,6 +122,9 @@ router.get('/:id/update', async (req, res, next) => {
 
 router.post('/:id/update', async (req, res, next) => {
   try {
+    if (!req.isAuthenticated || !req.isAuthenticated()) {
+      throw new AuthError('Please login')
+    }
     const { id } = req.params;
     await getBookOrThrow(id);
     const payload = normalizeBookPayload(req.body);
@@ -120,6 +137,9 @@ router.post('/:id/update', async (req, res, next) => {
 
 router.post('/:id/delete', async (req, res, next) => {
   try {
+    if (!req.isAuthenticated || !req.isAuthenticated()) {
+      throw new AuthError('Please login')
+    }
     const id = req.params.id
     await deleteBook(id);
     res.redirect('/books');

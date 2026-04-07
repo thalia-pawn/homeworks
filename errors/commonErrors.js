@@ -15,3 +15,12 @@ export class EntitityNotFound extends Error {
     this.statusCode = 404;
   }
 }
+
+export class AuthError extends Error {
+    constructor(message) {
+    super(message);
+    this.reason = 'AUTH_ERROR';
+    this.description = message;
+    this.statusCode = 401;
+  }
+}

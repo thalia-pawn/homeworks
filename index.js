@@ -1,11 +1,14 @@
 import express from 'express';
 import path from 'path';
+import session from 'express-session';
 import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 
 import { router as booksRouter } from './routes/books.js';
 import { router as usersRouter } from './routes/users.js';
 import { errHandling, notFound } from './midlewares/errors.js';
+import { MONGODB_URI, PORT } from './utils/config.js';
+import passport from './midlewares/passport.js';
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -18,28 +21,45 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'dev-session-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: false,
+    },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.get('/', (req, res) => {
   res.redirect('/books');
 });
 
 app.use('/books', booksRouter);
-app.use('/api/users', usersRouter);
+app.use('/user', usersRouter);
 
 app.use(notFound);
 app.use(errHandling);
 
 async function main() {
-    try{
-        await mongoose.connect("mongodb://root:password@mongo:27017/books?authSource=admin", {
-            pass: "password",
-            user: "root"
-        });
-        app.listen(3000);
-        console.log("Сервер запущен на порту: 3000");
-    }
-    catch(err) {
-        return console.error(err);
-    }
+  try {
+    await mongoose.connect(MONGODB_URI, {
+      pass: 'password',
+      user: 'root',
+    });
+
+    app.listen(PORT, () => {
+      console.log(`Сервер запущен на порту: ${PORT}`);
+    });
+  } catch (err) {
+    console.error(err);
+  }
 }
 
-main()
+main();

@@ -1,6 +1,6 @@
 services:
   libraryApp:
-    image: thaliapawn/library-node-app:1.2.0
+    image: thaliapawn/library-node-app:1.3.0
     container_name: libraryApp
     restart: unless-stopped
     ports:

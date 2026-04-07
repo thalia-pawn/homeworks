@@ -12,7 +12,7 @@ const bookModel = new Schema({
   },
   description: {
     type: String,
-    default : ''
+    default : null
   },
   authors: {
     type: String,
@@ -24,15 +24,15 @@ const bookModel = new Schema({
   },
   fileCover: {
     type: String,
-    default : ''
+    default : null
   },
   fileName: {
     type: String,
-    default : ''
+    default : null
   },
   fileBook: {
     type: String,
-    default : ''
+    default : null
   },
 });
 

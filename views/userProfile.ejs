@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <nav class="actions">
+        <a class="button button-secondary" href="/books">← К списку книг</a>
+        <form action="/user/logout" method="post" class="inline-form">
+            <button type="submit" class="button button-danger">Выйти из системы</button>
+        </form>
+      </nav>
+
+      <section class="card user-view">
+        <div>
+          <h1><%= user.title %></h1>
+          <dl class="user-meta">
+            <dt>ID</dt>
+            <dd><%= user.id %></dd>
+
+            <dt>Логин</dt>
+            <dd><%= user.login %></dd>
+
+            <dt>Почта</dt>
+            <dd><%= user.email %></dd>
+
+          </dl>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
