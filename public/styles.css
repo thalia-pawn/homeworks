@@ -40,6 +40,10 @@ body {
   margin-top: 10px;
 }
 
+.book-comments li + li {
+  margin-top: 10px;
+}
+
 .book-meta {
   display: grid;
   grid-template-columns: 180px 1fr;

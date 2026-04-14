@@ -3,16 +3,20 @@ import path from 'path';
 import session from 'express-session';
 import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
+import http from 'http';
 
 import { router as booksRouter } from './routes/books.js';
 import { router as usersRouter } from './routes/users.js';
 import { errHandling, notFound } from './midlewares/errors.js';
 import { MONGODB_URI, PORT } from './utils/config.js';
 import passport from './midlewares/passport.js';
+import { initCommentsSocket } from './events/comments.js';
+
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const server = http.createServer(app);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -41,6 +45,7 @@ app.get('/', (req, res) => {
   res.redirect('/books');
 });
 
+initCommentsSocket(server);
 app.use('/books', booksRouter);
 app.use('/user', usersRouter);
 
@@ -54,7 +59,7 @@ async function main() {
       user: 'root',
     });
 
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`Сервер запущен на порту: ${PORT}`);
     });
   } catch (err) {

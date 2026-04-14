@@ -1,12 +1,14 @@
 import express from 'express';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import passport from 'passport';
 import Book from '../dataModels/books.js';
-import { books, booksResources, getBookById, getBooks, createBook, incrViewsCount, deleteBook, isExist, updateBook } from '../repo/books.js';
+import { booksResources, getBookById, getBooks, createBook, incrViewsCount, deleteBook, isExist, updateBook } from '../repo/books.js';
 import { ValidationError, EntitityNotFound, AuthError } from '../errors/commonErrors.js';
 import { multerData } from '../midlewares/file.js';
 import axios from 'axios';
+import { getBookComments, addComment } from '../repo/comments.js';
+import comments from '../dataModels/comments.js';
+import { getCommentsIO } from '../events/comments.js';
 
 const router = express.Router();
 
@@ -90,7 +92,7 @@ router.get('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const book = await getBookOrThrow(id);
-
+    const comments = await getBookComments(id)
     await axios.post(`http://viewsService:3001/counter/${id}/incr`, {});
     const response = await axios.get(`http://viewsService:3001/counter/${id}`);
     await incrViewsCount(id, response.data);
@@ -98,7 +100,42 @@ router.get('/:id', async (req, res, next) => {
     res.render('view', {
       title: `Книга: ${book.title}`,
       book,
+      comments
     });
+  } catch (error) {
+    next(error);
+  }
+});
+router.post('/:id/comments/add', async (req, res, next) => {
+  try {
+    if (!req.isAuthenticated || !req.isAuthenticated()) {
+      return res.redirect('/user/login');
+    }
+
+    const { id } = req.params;
+    const text = req.body.text?.trim();
+
+    if (!text) {
+      return res.redirect(`/books/${id}`);
+    }
+
+    const comment = new comments({
+      bookId: id,
+      text,
+      login: req.user.login,
+    });
+
+    const savedComment = await addComment(comment);
+
+    const io = getCommentsIO();
+
+    io.to(id).emit('new_comment', {
+      login: savedComment?.login ?? comment.login,
+      text: savedComment?.text ?? comment.text,
+      bookId: id,
+    });
+
+    return res.redirect(`/books/${id}`);
   } catch (error) {
     next(error);
   }
